@@ -11,7 +11,7 @@ REM Debug
 cl -nologo -MD -Zi -FC -WX -W4 -EHsc ..\src\*.cpp ..\src\resource.res /DUNICODE /D_UNICODE /link user32.lib gdi32.lib comctl32.lib /out:minesweeper.exe 
 
 REM Prod
-REM cl -nologo -O2 -MD ..\src\*.cpp ..\src\resource.res /DUNICODE /D_UNICODE /link user32.lib gdi32.lib comctl32.lib /out:minesweeper.exe
+REM cl -nologo -O2 -MD -EHsc ..\src\*.cpp ..\src\resource.res /DUNICODE /D_UNICODE /link user32.lib gdi32.lib comctl32.lib /out:minesweeper.exe
 
 del *.obj
 del lock.tmp
