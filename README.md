@@ -5,7 +5,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 ## Backlog
 
 - [x] chore: initalize git repository
-- [ ] feat: the window construct
+- [x] feat: the window construct
 - [ ] feat: the menu bar construct
 - [ ] feat: the status bar construct
 - [ ] feat: basic error handling
