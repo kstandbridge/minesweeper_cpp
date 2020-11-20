@@ -404,8 +404,8 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     
     int x = (id - IDC_BUTTON) % columns;
     int y = (id - IDC_BUTTON) / columns;
-    
     TILE_STATE tileState = m_game.CheckTileState(x, y);
+    
     if(tileState == EXPLODE)
     {
         ToggleShowMines(hwnd, TRUE);
@@ -451,6 +451,32 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
         
         Button_SetText(hwndCtl, buf);
         Button_Enable(hwndCtl, FALSE);
+    }
+    
+    HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
+    if(hStatus == NULL)
+    {
+        m_logger.ErrorHandler(L"GetDlgItem");
+        return;
+    }
+    int tiles_to_check = m_game.get_tiles_to_check();
+    
+    if(tiles_to_check == 0)
+    {
+        ToggleShowMines(hwnd, TRUE);
+        if(!DisableTiles(hwnd))
+        {
+            MessageBox(hwnd, L"Failed to disable all tiles", L"Error", MB_OK | MB_ICONERROR);
+            return;
+        }
+        SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)L"Winner!!!");
+        MessageBox(hwnd, L"Winner!!!", L"Success!!!", MB_OK | MB_ICONINFORMATION);
+    }
+    else
+    {
+        std::wstringstream ss;
+        ss << "Tiles to check: " << tiles_to_check;
+        SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)ss.str().c_str());
     }
 }
 

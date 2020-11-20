@@ -9,7 +9,7 @@ SettingsDialog::SettingsDialog(Logger& logger)
 : m_logger(logger)
 , m_columns(10)
 , m_rows(15)
-, m_mines(20)
+, m_mines(10)
 {
 }
 
@@ -72,9 +72,9 @@ BOOL SettingsDialog::OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
         m_logger.ErrorHandler(L"GetDlgItem");
     }
     
-    SendMessage(slider, TBM_SETRANGE, (WPARAM)TRUE, (LPARAM)MAKELONG(20, 80));
-    SendMessage(slider, TBM_SETPAGESIZE, 0, (LPARAM)10);
-    SendMessage(slider, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)50);
+    SendMessage(slider, TBM_SETRANGE, (WPARAM)TRUE, (LPARAM)MAKELONG(5, 50));
+    SendMessage(slider, TBM_SETPAGESIZE, 0, (LPARAM)5);
+    SendMessage(slider, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)10);
     
     return TRUE;
 }

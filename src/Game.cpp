@@ -5,8 +5,8 @@
 Game::Game()
 : m_columns(10)
 , m_rows(15)
-, m_mines(20)
-, m_tilesToCheck(130)
+, m_mines(15)
+, m_tilesToCheck(145)
 , m_tiles(nullptr)
 {
 }
@@ -29,14 +29,17 @@ void Game::InitGame()
     CleanUp();
     
     m_tiles = (int*)GlobalAlloc(GPTR, sizeof(int) * m_rows * m_columns);
-    
-    InitMines(0, 0);
-    m_tilesToCheck = m_columns * m_rows - m_mines;
 }
 
 void Game::InitMines(int x, int y)
 {
-    int mines = m_mines;
+    m_tilesToCheck = m_columns * m_rows;
+    int mines = (m_columns * m_rows) * m_mines / 100;
+    
+    if(mines == 0)
+    {
+        mines++;
+    }
     
     while(mines > 0)
     {
@@ -47,6 +50,7 @@ void Game::InitMines(int x, int y)
         {
             m_tiles[ry * m_columns + rx] = MINE;
             mines--;
+            m_tilesToCheck--;
         }
     }
 }

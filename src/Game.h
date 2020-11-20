@@ -49,6 +49,7 @@ class Game
     void set_rows(int rows) { m_rows = rows; }
     int get_mines() { return m_mines; }
     void set_mines(int mines) { m_mines = mines; }
+    int get_tiles_to_check() { return m_tilesToCheck; }
     
     TILE_STATE GetTileState(int x, int y);
     TILE_STATE CheckTileState(int x, int y);
