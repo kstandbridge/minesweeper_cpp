@@ -8,9 +8,19 @@
 #endif
 #define IDC_STATIC (-1) // all static control
 
-#define IDR_MENU      1000
-#define IDM_GAME_EXIT 1001
+#define IDR_MENU          1000
+#define IDM_GAME_SETTINGS 1001
+#define IDM_GAME_EXIT     1002
 
 #define IDC_STATUS 1100
+
+#define IDD_SETTINGS         2000
+#define IDC_SETTINGS_EASY    2001
+#define IDC_SETTINGS_NORMAL  2002
+#define IDC_SETTINGS_HARD    2003
+#define IDC_SETTINGS_CUSTOM  2004
+#define IDC_SETTINGS_MINES   2005
+#define IDC_SETTINGS_COLUMNS 2006
+#define IDC_SETTINGS_ROWS    2007
 
 #endif //RESOURCE_H

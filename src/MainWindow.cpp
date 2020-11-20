@@ -2,8 +2,10 @@
 
 #include <Windowsx.h>
 #include <CommCtrl.h>
+#include <sstream>
 
 #include "Resource.h"
+#include "SettingsDialog.h"
 
 wchar_t MainWindow::szClassName[] = L"Minesweeper";
 
@@ -139,16 +141,38 @@ void MainWindow::OnSize(HWND hwnd, UINT state, int cx, int cy)
 
 void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
-    UNREFERENCED_PARAMETER(hwnd);
     UNREFERENCED_PARAMETER(hwndCtl);
     UNREFERENCED_PARAMETER(codeNotify);
     
     switch(id)
     {
+        case IDM_GAME_SETTINGS:
+        {
+            OnCommand_Game_Settings(hwnd);
+        } break;
         case IDM_GAME_EXIT:
         {
             OnCommand_Game_Exit();
         } break;
+    }
+}
+
+void MainWindow::OnCommand_Game_Settings(HWND hwnd)
+{
+    SettingsDialog settingsDlg(m_logger);
+    int res = settingsDlg.ShowDialog(GetModuleHandle(NULL), hwnd);
+    if(res == IDOK)
+    {
+        std::wstringstream ss;
+        ss 
+            << L"Rows: " << settingsDlg.get_rows() << std::endl
+            << L"Columns: " << settingsDlg.get_columns() << std::endl
+            << L"Mines: " << settingsDlg.get_mines() << L"%";
+        MessageBox(hwnd, ss.str().c_str(), L"Settings", MB_OK | MB_ICONINFORMATION);
+    }
+    else
+    {
+        MessageBox(hwnd, L"Must have clicked cancel", L"Settings", MB_OK | MB_ICONWARNING);
     }
 }
 
