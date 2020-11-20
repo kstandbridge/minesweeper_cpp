@@ -47,6 +47,7 @@ class MainWindow
     void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);
     BOOL CallOnSize(HWND hwnd);
     void ToggleShowMines(HWND hwnd, BOOL show_mines);
+    BOOL DisableTiles(HWND hwnd);
 };
 
 #endif //_MAIN_WINDOW_H

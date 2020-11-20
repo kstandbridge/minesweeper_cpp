@@ -62,3 +62,23 @@ TILE_STATE Game::GetTileState(int x, int y)
     TILE_STATE result = (TILE_STATE)m_tiles[y * m_columns + x];
     return result;
 }
+
+TILE_STATE Game::CheckTileState(int x, int y)
+{
+    if(!m_tiles)
+    {
+        MessageBox(NULL, L"Board not initalized!", L"Error", MB_OK | MB_ICONERROR);
+        return UNCHECKED;
+    }
+    
+    m_tilesToCheck--;
+    
+    TILE_STATE result = (TILE_STATE)m_tiles[y * m_columns + x];
+    if(result == MINE)
+    {
+        m_tiles[y * m_columns + x] = EXPLODE;
+        return EXPLODE;
+    }
+    
+    return UNCHECKED;
+}

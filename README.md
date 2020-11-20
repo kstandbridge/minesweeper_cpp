@@ -15,7 +15,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: add new game button
 - [x] feat: size/position buttons on window resize
 - [x] feat: debug menu to show location of placed mines
-- [ ] feat: add game over when mine clicked
+- [x] feat: add game over when mine clicked
 - [ ] feat: show count of surrounding mines on click
 - [ ] feat: auto click surrounding tile if no mines
 - [ ] feat: add game win when all mines found

@@ -378,6 +378,19 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
     m_game.InitGame();
     m_game.InitMines(0, 0); // TODO this should be done on first move
     
+    HMENU hMenu = GetMenu(hwnd);
+    if(hMenu == NULL)
+    {
+        m_logger.ErrorHandler(L"GetMenu");
+        return FALSE;
+    }
+    DWORD res = CheckMenuItem(hMenu, IDM_DEBUG_SHOW_MINES, MF_BYCOMMAND | MF_UNCHECKED);
+    if(res == -1)
+    {
+        m_logger.ErrorHandler(L"CheckMenuItem");
+        return FALSE;
+    }
+    
     UpdateStatusText(hwnd, 1, L"Good Luck!");
     return TRUE;
 }
@@ -394,12 +407,17 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     int x = (id - IDC_BUTTON) % columns;
     int y = (id - IDC_BUTTON) / columns;
     
-    std::wstringstream ss;
-    ss 
-        << x << ", " << y << std::endl
-        << "Button: " << id;
-    
-    MessageBox(hwnd, ss.str().c_str(), L"Tile Clicked", MB_OK | MB_ICONINFORMATION);
+    TILE_STATE tileState = m_game.CheckTileState(x, y);
+    if(tileState == EXPLODE)
+    {
+        ToggleShowMines(hwnd, TRUE);
+        if(!DisableTiles(hwnd))
+        {
+            MessageBox(hwnd, L"Failed to disable all tiles", L"Error", MB_OK | MB_ICONERROR);
+            return;
+        }
+        MessageBox(hwnd, L"Game Over!!!", L"BOOM!!!", MB_OK | MB_ICONWARNING);
+    }
 }
 
 BOOL MainWindow::CallOnSize(HWND hwnd)
@@ -463,4 +481,25 @@ void MainWindow::ToggleShowMines(HWND hwnd, BOOL show_mines)
             } break;
         }
     }
+}
+
+BOOL MainWindow::DisableTiles(HWND hwnd)
+{
+    int columns = m_game.get_columns();
+    int rows = m_game.get_rows();
+    
+    for(int x = 0; x < columns; x++)
+        for(int y = 0; y < rows; y++)
+    {
+        int button_id = IDC_BUTTON + (y * columns + x);
+        
+        HWND hButton = GetDlgItem(hwnd, button_id);
+        if(hButton == NULL)
+        {
+            m_logger.ErrorHandler(L"GetDlgItem");
+            return FALSE;
+        }
+        Button_Enable(hButton, FALSE);
+    }
+    return TRUE;
 }

@@ -51,6 +51,7 @@ class Game
     void set_mines(int mines) { m_mines = mines; }
     
     TILE_STATE GetTileState(int x, int y);
+    TILE_STATE CheckTileState(int x, int y);
 };
 
 #endif //_GAME_H
