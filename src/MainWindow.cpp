@@ -418,6 +418,19 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
         }
         MessageBox(hwnd, L"Game Over!!!", L"BOOM!!!", MB_OK | MB_ICONWARNING);
     }
+    else if(tileState == CLEAR)
+    {
+        Button_Enable(hwndCtl, FALSE);
+        // TODO Click surrounding buttons
+    }
+    else
+    {
+        wchar_t buf[255];
+        swprintf_s(buf, sizeof(buf), L"%d", tileState);
+        
+        Button_SetText(hwndCtl, buf);
+        Button_Enable(hwndCtl, FALSE);
+    }
 }
 
 BOOL MainWindow::CallOnSize(HWND hwnd)

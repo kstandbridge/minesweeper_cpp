@@ -80,5 +80,34 @@ TILE_STATE Game::CheckTileState(int x, int y)
         return EXPLODE;
     }
     
+    int mines = 0;
+    for(int i = -1; i < 2; i++)
+    {
+        for(int j = -1; j < 2; j++)
+        {
+            if(x + i >= 0 && x + i < m_columns && y + j >= 0 && y + j < m_rows)
+            {
+                if(m_tiles[(y + j) * m_columns + (x + i)] == MINE)
+                {
+                    mines++;
+                }
+            }
+        }
+    }
+    if(mines == 0)
+    {
+        m_tiles[y * m_columns + x] = CLEAR;
+        return CLEAR;
+    }
+    if(mines > 0 && mines < 10)
+    {
+        m_tiles[y * m_columns + x] = mines;
+        return (TILE_STATE)mines;
+    }
+    else
+    {
+        MessageBox(NULL, L"Too many mines on surrounding tiles, memory corruption?", L"Error", MB_OK | MB_ICONERROR);
+    }
+    
     return UNCHECKED;
 }
