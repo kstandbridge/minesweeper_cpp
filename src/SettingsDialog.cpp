@@ -7,9 +7,9 @@
 
 SettingsDialog::SettingsDialog(Logger& logger)
 : m_logger(logger)
-, m_columns(0)
-, m_rows(0)
-, m_mines(0)
+, m_columns(10)
+, m_rows(15)
+, m_mines(20)
 {
 }
 

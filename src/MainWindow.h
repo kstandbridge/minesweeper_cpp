@@ -6,15 +6,17 @@
 #include <Windows.h>
 
 #include "Logger.h"
+#include "Game.h"
 
 class MainWindow
 {
     private:
     HWND m_hwnd;
     Logger m_logger;
+    Game m_game;
     
     public:
-    MainWindow(Logger& logger);
+    MainWindow(Logger& logger, Game& game);
     static BOOL RegisterClass(HINSTANCE hInstance);
     
     HWND Create(HINSTANCE hInstance);
@@ -37,6 +39,7 @@ class MainWindow
     void OnCommand_Game_Exit();
     
     void UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText);
+    BOOL CleanUpGrid(HWND hwnd);
     BOOL InitalizeGrid(HWND hwnd);
     void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);
 };

@@ -16,7 +16,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     UNREFERENCED_PARAMETER(nCmdShow);
     
     Logger logger;
-    MainWindow mainWindow(logger);
+    Game game;
+    MainWindow mainWindow(logger, game);
     
     if(!MainWindow::RegisterClass(hInstance))
     {

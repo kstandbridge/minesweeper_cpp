@@ -11,7 +11,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: the status bar construct
 - [x] feat: the settings dialog construct
 - [x] feat: draw a grid of button
-- [ ] feat: the game construct
+- [x] feat: the game construct
 - [ ] feat: add new game button
 - [ ] feat: size/position buttons on window resize
 - [ ] feat: debug menu to show location of placed mines

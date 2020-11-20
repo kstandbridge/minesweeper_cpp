@@ -9,8 +9,9 @@
 
 wchar_t MainWindow::szClassName[] = L"Minesweeper";
 
-MainWindow::MainWindow(Logger& logger) 
+MainWindow::MainWindow(Logger& logger, Game& game) 
 : m_logger(logger)
+, m_game(game)
 {
 }
 
@@ -166,12 +167,22 @@ void MainWindow::OnCommand_Game_Settings(HWND hwnd)
     int res = settingsDlg.ShowDialog(GetModuleHandle(NULL), hwnd);
     if(res == IDOK)
     {
-        std::wstringstream ss;
-        ss 
-            << L"Rows: " << settingsDlg.get_rows() << std::endl
-            << L"Columns: " << settingsDlg.get_columns() << std::endl
-            << L"Mines: " << settingsDlg.get_mines() << L"%";
-        MessageBox(hwnd, ss.str().c_str(), L"Settings", MB_OK | MB_ICONINFORMATION);
+        if(!CleanUpGrid(hwnd))
+        {
+            MessageBox(hwnd, L"Failed to clean up grid", L"Error!", MB_ICONERROR);
+            return;
+        }
+        
+        m_game.set_columns(settingsDlg.get_columns());
+        m_game.set_rows(settingsDlg.get_rows());
+        m_game.set_mines(settingsDlg.get_mines());
+        
+        if(!InitalizeGrid(hwnd))
+        {
+            MessageBox(hwnd, L"Failed to initalize up grid", L"Error!", MB_ICONERROR);
+            return;
+        }
+        
     }
     else
     {
@@ -194,6 +205,29 @@ void MainWindow::UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText)
     SendMessage(hStatus, SB_SETTEXT, index, (LPARAM)lpszText);
 }
 
+BOOL MainWindow::CleanUpGrid(HWND hwnd)
+{
+    int columns = m_game.get_columns();
+    int rows = m_game.get_rows();
+    
+    for(int x = 0; x < columns; x++)
+        for(int y = 0; y < rows; y++)
+    {
+        int button_id = IDC_BUTTON + (y * columns  + x);
+        
+        HWND hButton = GetDlgItem(hwnd, button_id);
+        if(hButton == NULL)
+        {
+            m_logger.ErrorHandler(L"GetDlgItem");
+            return FALSE;
+        }
+        
+        DestroyWindow(hButton);
+    }
+    
+    return TRUE;
+}
+
 BOOL MainWindow::InitalizeGrid(HWND hwnd)
 {
     RECT rect;
@@ -212,8 +246,8 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
         return FALSE;
     }
     
-    int columns = 10;
-    int rows = 15;
+    int columns = m_game.get_columns();
+    int rows = m_game.get_rows();
     
     for(int x = 0; x < columns; x++)
         for(int y = 0; y < rows; y++)
@@ -242,8 +276,8 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     
     Button_Enable(hwndCtl, FALSE);
     
-    int columns = 10;
-    //int rows = 15;
+    int columns = m_game.get_columns();
+    // int rows = m_game.get_rows();
     
     int x = (id - IDC_BUTTON) % columns;
     int y = (id - IDC_BUTTON) / columns;
