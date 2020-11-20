@@ -33,14 +33,15 @@ class Game
     int m_mines;
     int m_tilesToCheck;
     int* m_tiles;
+    bool m_firstMove;
     
     void CleanUp();
+    void InitMines(int x, int y);
     
     public:
     Game();
     ~Game();
     void InitGame();
-    void InitMines(int x, int y);
     
     
     int get_columns() { return m_columns; }

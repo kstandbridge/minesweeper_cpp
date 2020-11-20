@@ -376,7 +376,6 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
     }
     
     m_game.InitGame();
-    m_game.InitMines(0, 0); // TODO this should be done on first move
     
     HMENU hMenu = GetMenu(hwnd);
     if(hMenu == NULL)

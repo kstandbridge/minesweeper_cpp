@@ -8,6 +8,7 @@ Game::Game()
 , m_mines(15)
 , m_tilesToCheck(145)
 , m_tiles(nullptr)
+, m_firstMove(TRUE)
 {
 }
 
@@ -26,6 +27,8 @@ void Game::CleanUp()
 
 void Game::InitGame()
 {
+    m_firstMove = TRUE;
+    
     CleanUp();
     
     m_tiles = (int*)GlobalAlloc(GPTR, sizeof(int) * m_rows * m_columns);
@@ -63,21 +66,21 @@ TILE_STATE Game::GetTileState(int x, int y)
         return UNCHECKED;
     }
     
+    if(m_firstMove == TRUE)
+    {
+        m_firstMove = FALSE;
+        InitMines(x, y);
+    }
+    
     TILE_STATE result = (TILE_STATE)m_tiles[y * m_columns + x];
     return result;
 }
 
 TILE_STATE Game::CheckTileState(int x, int y)
 {
-    if(!m_tiles)
-    {
-        MessageBox(NULL, L"Board not initalized!", L"Error", MB_OK | MB_ICONERROR);
-        return UNCHECKED;
-    }
-    
+    TILE_STATE result = GetTileState(x, y);
     m_tilesToCheck--;
     
-    TILE_STATE result = (TILE_STATE)m_tiles[y * m_columns + x];
     if(result == MINE)
     {
         m_tiles[y * m_columns + x] = EXPLODE;
