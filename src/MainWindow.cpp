@@ -94,6 +94,8 @@ BOOL MainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
 {
     UNREFERENCED_PARAMETER(lpCreateStruct);
     
+    srand((unsigned int)time(NULL));
+    
     HWND hStatus = CreateWindowEx(0, STATUSCLASSNAME, L"",
                                   SBARS_SIZEGRIP | WS_CHILD | WS_VISIBLE,
                                   0, 0, 0, 0,
@@ -198,6 +200,10 @@ void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
         {
             OnCommand_Game_Exit();
         } break;
+        case IDM_DEBUG_SHOW_MINES:
+        {
+            OnCommand_Debug_ShowMines(hwnd);
+        } break;
         default:
         {
             OnCommand_Tile(hwnd, id, hwndCtl);
@@ -265,6 +271,37 @@ void MainWindow::OnCommand_Game_Settings(HWND hwnd)
 void MainWindow::OnCommand_Game_Exit()
 {
     PostQuitMessage(0);
+}
+
+void MainWindow::OnCommand_Debug_ShowMines(HWND hwnd)
+{
+    HMENU hMenu = GetMenu(hwnd);
+    if(hMenu == NULL)
+    {
+        m_logger.ErrorHandler(L"GetMenu");
+        return;
+    }
+    DWORD res = GetMenuState(hMenu, IDM_DEBUG_SHOW_MINES, MF_BYCOMMAND);
+    if(res == MF_CHECKED)
+    {
+        res = CheckMenuItem(hMenu, IDM_DEBUG_SHOW_MINES, MF_BYCOMMAND | MF_UNCHECKED);
+        if(res == -1)
+        {
+            m_logger.ErrorHandler(L"CheckMenuItem");
+            return;
+        }
+        ToggleShowMines(hwnd, FALSE);
+    }
+    else
+    {
+        res = CheckMenuItem(hMenu, IDM_DEBUG_SHOW_MINES, MF_BYCOMMAND | MF_CHECKED);
+        if(res == -1)
+        {
+            m_logger.ErrorHandler(L"CheckMenuItem");
+            return;
+        }
+        ToggleShowMines(hwnd, TRUE);
+    }
 }
 
 void MainWindow::UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText)
@@ -338,6 +375,9 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
         }
     }
     
+    m_game.InitGame();
+    m_game.InitMines(0, 0); // TODO this should be done on first move
+    
     UpdateStatusText(hwnd, 1, L"Good Luck!");
     return TRUE;
 }
@@ -375,4 +415,52 @@ BOOL MainWindow::CallOnSize(HWND hwnd)
     int window_height = rcClient.bottom - rcClient.top;
     OnSize(hwnd, 0, window_width, window_height);
     return TRUE;
+}
+
+void MainWindow::ToggleShowMines(HWND hwnd, BOOL show_mines)
+{
+    int columns = m_game.get_columns();
+    int rows = m_game.get_rows();
+    
+    for(int x = 0; x < columns; x++)
+        for(int y = 0; y < rows; y++)
+    {
+        int button_id = IDC_BUTTON + (y * columns  + x);
+        HWND button_hwnd = GetDlgItem(hwnd, button_id);
+        if(button_hwnd == NULL)
+        {
+            MessageBox(hwnd, L"Failed to get button handle!", L"Error", MB_OK | MB_ICONERROR);
+            return;
+        }
+        TILE_STATE state = m_game.GetTileState(x, y);
+        switch(state)
+        {
+            case MINE:
+            {
+                if(show_mines)
+                {
+                    Button_SetText(button_hwnd, L"B");
+                }
+                else
+                {
+                    Button_SetText(button_hwnd, L"");
+                }
+            } break;
+            case EXPLODE:
+            {
+                Button_SetText(button_hwnd, L"E");
+            } break;
+            case CLEAR:
+            {
+                Button_SetText(button_hwnd, L"");
+            } break;
+            default:
+            {
+                wchar_t buf[255];
+                swprintf_s(buf, sizeof(buf), L"%d", state);
+                
+                Button_SetText(button_hwnd, buf);
+            } break;
+        }
+    }
 }

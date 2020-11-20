@@ -38,12 +38,15 @@ class MainWindow
     void OnCommand_Game_New(HWND hwnd);
     void OnCommand_Game_Settings(HWND hwnd);
     void OnCommand_Game_Exit();
+    void OnCommand_Debug_ShowMines(HWND hwnd);
+    
     
     void UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText);
     BOOL CleanUpGrid(HWND hwnd);
     BOOL InitalizeGrid(HWND hwnd);
     void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);
     BOOL CallOnSize(HWND hwnd);
+    void ToggleShowMines(HWND hwnd, BOOL show_mines);
 };
 
 #endif //_MAIN_WINDOW_H
