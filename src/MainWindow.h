@@ -43,6 +43,7 @@ class MainWindow
     BOOL CleanUpGrid(HWND hwnd);
     BOOL InitalizeGrid(HWND hwnd);
     void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);
+    BOOL CallOnSize(HWND hwnd);
 };
 
 #endif //_MAIN_WINDOW_H

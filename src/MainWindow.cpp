@@ -24,7 +24,7 @@ BOOL MainWindow::RegisterClass(HINSTANCE hInstance)
     wc.lpszClassName = szClassName;
     wc.lpfnWndProc = WindowProcedure;
     
-    wc.hbrBackground = (HBRUSH) COLOR_BACKGROUND;
+    wc.hbrBackground = (HBRUSH) COLOR_BACKGROUND + 1;
     wc.hCursor = LoadCursor (NULL, IDC_ARROW);
     wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
@@ -128,15 +128,55 @@ void MainWindow::OnDestroy(HWND hwnd)
 void MainWindow::OnSize(HWND hwnd, UINT state, int cx, int cy)
 {
     UNREFERENCED_PARAMETER(state);
-    UNREFERENCED_PARAMETER(cx);
-    UNREFERENCED_PARAMETER(cy);
+    
+    int window_width = cx;
+    int window_height = cy;
     
     HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
     if(hStatus == NULL)
     {
         m_logger.ErrorHandler(L"GetDlgItem");
+        return;
     }
     SendMessage(hStatus, WM_SIZE, 0, 0);
+    
+    RECT rcStatus;
+    if(!GetWindowRect(hStatus, &rcStatus))
+    {
+        m_logger.ErrorHandler(L"GetWindowRect");
+        return;
+    }
+    
+    int status_height = rcStatus.bottom - rcStatus.top;
+    window_height = window_height - status_height;
+    
+    int columns = m_game.get_columns();
+    int rows = m_game.get_rows();
+    
+    int offset_left = window_width % columns / 2;
+    int offset_top = window_height % rows / 2;
+    
+    for(int x = 0; x < columns; x++)
+        for(int y = 0; y < rows; y++)
+    {
+        int button_id = IDC_BUTTON + (y * columns + x);
+        
+        int button_width = window_width / columns;
+        int button_height = window_height / rows;
+        int button_left = (window_width / columns * x) + offset_left;
+        int button_top = (window_height / rows * y) + offset_top;
+        
+        HWND hButton = GetDlgItem(hwnd, button_id);
+        if(hButton == NULL)
+        {
+            m_logger.ErrorHandler(L"GetDlgItem");
+            return;
+        }
+        
+        MoveWindow(hButton, button_left, button_top, button_width, button_height, FALSE);
+    }
+    InvalidateRect(hwnd, NULL, TRUE);
+    UpdateWindow(hwnd);
 }
 
 void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
@@ -169,13 +209,20 @@ void MainWindow::OnCommand_Game_New(HWND hwnd)
 {
     if(!CleanUpGrid(hwnd))
     {
-        MessageBox(hwnd, L"Failed to clean up grid", L"Error!", MB_ICONERROR);
+        MessageBox(hwnd, L"Failed to clean up grid", L"Error!", MB_OK | MB_ICONERROR);
         return;
     }
     
     if(!InitalizeGrid(hwnd))
     {
-        MessageBox(hwnd, L"Failed to initalize up grid", L"Error!", MB_ICONERROR);
+        MessageBox(hwnd, L"Failed to initalize up grid", L"Error!", MB_OK | MB_ICONERROR);
+        return;
+    }
+    
+    if(!CallOnSize(hwnd))
+    {
+        MessageBox(hwnd, L"Failed to resize grid", L"Error", MB_OK | MB_ICONERROR);
+        return;
     }
 }
 
@@ -198,6 +245,13 @@ void MainWindow::OnCommand_Game_Settings(HWND hwnd)
         if(!InitalizeGrid(hwnd))
         {
             MessageBox(hwnd, L"Failed to initalize up grid", L"Error!", MB_ICONERROR);
+            return;
+            
+        }
+        
+        if(!CallOnSize(hwnd))
+        {
+            MessageBox(hwnd, L"Failed to resize grid", L"Error", MB_OK | MB_ICONERROR);
             return;
         }
         
@@ -306,4 +360,19 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
         << "Button: " << id;
     
     MessageBox(hwnd, ss.str().c_str(), L"Tile Clicked", MB_OK | MB_ICONINFORMATION);
+}
+
+BOOL MainWindow::CallOnSize(HWND hwnd)
+{
+    RECT rcClient;
+    if(!GetClientRect(hwnd, &rcClient))
+    {
+        m_logger.ErrorHandler(L"GetClientRect");
+        return FALSE;
+    }
+    
+    int window_width = rcClient.right - rcClient.left;
+    int window_height = rcClient.bottom - rcClient.top;
+    OnSize(hwnd, 0, window_width, window_height);
+    return TRUE;
 }

@@ -13,7 +13,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: draw a grid of button
 - [x] feat: the game construct
 - [x] feat: add new game button
-- [ ] feat: size/position buttons on window resize
+- [x] feat: size/position buttons on window resize
 - [ ] feat: debug menu to show location of placed mines
 - [ ] feat: add game over when mine clicked
 - [ ] feat: show count of surrounding mines on click
