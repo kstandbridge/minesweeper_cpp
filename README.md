@@ -10,11 +10,12 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: the menu bar construct
 - [x] feat: the status bar construct
 - [x] feat: the settings dialog construct
-- [ ] feat: draw a grid of button
+- [x] feat: draw a grid of button
+- [ ] feat: the game construct
+- [ ] feat: add new game button
 - [ ] feat: size/position buttons on window resize
 - [ ] feat: debug menu to show location of placed mines
 - [ ] feat: add game over when mine clicked
-- [ ] feat: add new game button
 - [ ] feat: show count of surrounding mines on click
 - [ ] feat: auto click surrounding tile if no mines
 - [ ] feat: add game win when all mines found

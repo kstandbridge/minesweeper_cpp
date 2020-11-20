@@ -37,6 +37,8 @@ class MainWindow
     void OnCommand_Game_Exit();
     
     void UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText);
+    BOOL InitalizeGrid(HWND hwnd);
+    void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);
 };
 
 #endif //_MAIN_WINDOW_H

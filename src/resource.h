@@ -23,4 +23,6 @@
 #define IDC_SETTINGS_COLUMNS 2006
 #define IDC_SETTINGS_ROWS    2007
 
+#define IDC_BUTTON 9000
+
 #endif //RESOURCE_H

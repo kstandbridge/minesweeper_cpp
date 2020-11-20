@@ -107,8 +107,7 @@ BOOL MainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
     int status_width[] = { 100, -1 };
     SendMessage(hStatus, SB_SETPARTS, sizeof(status_width)/sizeof(int), (LPARAM)status_width);
     
-    UpdateStatusText(hwnd, 0, L"Left Text");
-    UpdateStatusText(hwnd, 1, L"Right Text");
+    InitalizeGrid(hwnd);
     
     return TRUE;
 }
@@ -154,6 +153,10 @@ void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
         {
             OnCommand_Game_Exit();
         } break;
+        default:
+        {
+            OnCommand_Tile(hwnd, id, hwndCtl);
+        } break;
     }
 }
 
@@ -189,4 +192,66 @@ void MainWindow::UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText)
         m_logger.ErrorHandler(L"GetDlgItem");
     }
     SendMessage(hStatus, SB_SETTEXT, index, (LPARAM)lpszText);
+}
+
+BOOL MainWindow::InitalizeGrid(HWND hwnd)
+{
+    RECT rect;
+    if(!GetClientRect(hwnd, &rect))
+    {
+        m_logger.ErrorHandler(L"GetClientRect");
+        return FALSE;
+    }
+    
+    HFONT hFont = CreateFont(24,0,0,0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+                             CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, NULL);
+    
+    if(hFont == NULL)
+    {
+        m_logger.ErrorHandler(L"CreateFont");
+        return FALSE;
+    }
+    
+    int columns = 10;
+    int rows = 15;
+    
+    for(int x = 0; x < columns; x++)
+        for(int y = 0; y < rows; y++)
+    {
+        int button_id = IDC_BUTTON + (y * columns  + x);
+        
+        HWND hButton = CreateWindow(L"BUTTON", L"", 
+                                    WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+                                    (1+x)*32, (1+y)*32, 32, 32,
+                                    hwnd, (HMENU)button_id, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
+        
+        if(hButton == NULL)
+        {
+            m_logger.ErrorHandler(L"CreateWindow");
+            return FALSE;
+        }
+    }
+    
+    UpdateStatusText(hwnd, 1, L"Good Luck!");
+    return TRUE;
+}
+
+void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
+{
+    UNREFERENCED_PARAMETER(hwnd);
+    
+    Button_Enable(hwndCtl, FALSE);
+    
+    int columns = 10;
+    //int rows = 15;
+    
+    int x = (id - IDC_BUTTON) % columns;
+    int y = (id - IDC_BUTTON) / columns;
+    
+    std::wstringstream ss;
+    ss 
+        << x << ", " << y << std::endl
+        << "Button: " << id;
+    
+    MessageBox(hwnd, ss.str().c_str(), L"Tile Clicked", MB_OK | MB_ICONINFORMATION);
 }
