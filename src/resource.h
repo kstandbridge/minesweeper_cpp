@@ -11,4 +11,6 @@
 #define IDR_MENU      1000
 #define IDM_GAME_EXIT 1001
 
+#define IDC_STATUS 1100
+
 #endif //RESOURCE_H

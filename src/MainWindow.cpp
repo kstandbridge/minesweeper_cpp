@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include <Windowsx.h>
+#include <CommCtrl.h>
 
 #include "Resource.h"
 
@@ -79,6 +80,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
         HANDLE_MSG(hwnd, WM_CREATE, OnCreate);
         HANDLE_MSG(hwnd, WM_CLOSE, OnClose);
         HANDLE_MSG(hwnd, WM_DESTROY, OnDestroy);
+        HANDLE_MSG(hwnd, WM_SIZE, OnSize);
         HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
     }
     
@@ -87,10 +89,24 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 
 BOOL MainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
 {
-    UNREFERENCED_PARAMETER(hwnd);
     UNREFERENCED_PARAMETER(lpCreateStruct);
     
+    HWND hStatus = CreateWindowEx(0, STATUSCLASSNAME, L"",
+                                  SBARS_SIZEGRIP | WS_CHILD | WS_VISIBLE,
+                                  0, 0, 0, 0,
+                                  hwnd, (HMENU)IDC_STATUS, GetModuleHandle(NULL), NULL);
     
+    if(hStatus == NULL)
+    {
+        m_logger.ErrorHandler(L"CreateWindowEx");
+        return FALSE;
+    }
+    
+    int status_width[] = { 100, -1 };
+    SendMessage(hStatus, SB_SETPARTS, sizeof(status_width)/sizeof(int), (LPARAM)status_width);
+    
+    UpdateStatusText(hwnd, 0, L"Left Text");
+    UpdateStatusText(hwnd, 1, L"Right Text");
     
     return TRUE;
 }
@@ -105,6 +121,20 @@ void MainWindow::OnDestroy(HWND hwnd)
     UNREFERENCED_PARAMETER(hwnd);
     
     PostQuitMessage(0);
+}
+
+void MainWindow::OnSize(HWND hwnd, UINT state, int cx, int cy)
+{
+    UNREFERENCED_PARAMETER(state);
+    UNREFERENCED_PARAMETER(cx);
+    UNREFERENCED_PARAMETER(cy);
+    
+    HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
+    if(hStatus == NULL)
+    {
+        m_logger.ErrorHandler(L"GetDlgItem");
+    }
+    SendMessage(hStatus, WM_SIZE, 0, 0);
 }
 
 void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
@@ -125,4 +155,14 @@ void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 void MainWindow::OnCommand_Game_Exit()
 {
     PostQuitMessage(0);
+}
+
+void MainWindow::UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText)
+{
+    HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
+    if(hStatus == NULL)
+    {
+        m_logger.ErrorHandler(L"GetDlgItem");
+    }
+    SendMessage(hStatus, SB_SETTEXT, index, (LPARAM)lpszText);
 }
