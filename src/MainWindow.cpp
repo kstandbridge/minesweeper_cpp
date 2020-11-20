@@ -397,12 +397,10 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
 
 void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
 {
-    UNREFERENCED_PARAMETER(hwnd);
-    
     Button_Enable(hwndCtl, FALSE);
     
     int columns = m_game.get_columns();
-    // int rows = m_game.get_rows();
+    int rows = m_game.get_rows();
     
     int x = (id - IDC_BUTTON) % columns;
     int y = (id - IDC_BUTTON) / columns;
@@ -421,7 +419,30 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     else if(tileState == CLEAR)
     {
         Button_Enable(hwndCtl, FALSE);
-        // TODO Click surrounding buttons
+        for(int i = -1; i < 2; i++)
+        {
+            for(int j = -1; j < 2; j++)
+            {
+                if(x + i >= 0 && x + i < columns && y + j >= 0 && y + j < rows)
+                {
+                    if(m_game.GetTileState(x + i, j + y) == MINE)
+                    {
+                        continue;
+                    }
+                    int button_id = IDC_BUTTON + ((y + j) * columns + (x + i));
+                    HWND hButton  = GetDlgItem(hwnd, button_id);
+                    if(hButton == NULL)
+                    {
+                        m_logger.ErrorHandler(L"GetDlgItem");
+                        return;
+                    }
+                    if(IsWindowEnabled(hButton))
+                    {
+                        OnCommand_Tile(hwnd, button_id, hButton);
+                    }
+                }
+            }
+        }
     }
     else
     {
