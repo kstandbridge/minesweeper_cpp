@@ -146,6 +146,10 @@ void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
     
     switch(id)
     {
+        case IDM_GAME_NEW:
+        {
+            OnCommand_Game_New(hwnd);
+        } break;
         case IDM_GAME_SETTINGS:
         {
             OnCommand_Game_Settings(hwnd);
@@ -158,6 +162,20 @@ void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
         {
             OnCommand_Tile(hwnd, id, hwndCtl);
         } break;
+    }
+}
+
+void MainWindow::OnCommand_Game_New(HWND hwnd)
+{
+    if(!CleanUpGrid(hwnd))
+    {
+        MessageBox(hwnd, L"Failed to clean up grid", L"Error!", MB_ICONERROR);
+        return;
+    }
+    
+    if(!InitalizeGrid(hwnd))
+    {
+        MessageBox(hwnd, L"Failed to initalize up grid", L"Error!", MB_ICONERROR);
     }
 }
 

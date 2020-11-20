@@ -9,8 +9,9 @@
 #define IDC_STATIC (-1) // all static control
 
 #define IDR_MENU          1000
-#define IDM_GAME_SETTINGS 1001
-#define IDM_GAME_EXIT     1002
+#define IDM_GAME_NEW      1001
+#define IDM_GAME_SETTINGS 1002
+#define IDM_GAME_EXIT     1003
 
 #define IDC_STATUS 1100
 

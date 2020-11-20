@@ -35,6 +35,7 @@ class MainWindow
     void OnDestroy(HWND hwnd);
     void OnSize(HWND hwnd, UINT state, int cx, int cy);
     void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
+    void OnCommand_Game_New(HWND hwnd);
     void OnCommand_Game_Settings(HWND hwnd);
     void OnCommand_Game_Exit();
     
