@@ -31,6 +31,8 @@ class MainWindow
     BOOL OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct);
     void OnClose(HWND hwnd);
     void OnDestroy(HWND hwnd);
+    void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
+    void OnCommand_Game_Exit();
 };
 
 #endif //_MAIN_WINDOW_H

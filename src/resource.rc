@@ -1,3 +1,11 @@
 #include <windows.h>
 
 #include "resource.h"
+
+IDR_MENU MENU
+{
+	POPUP "&Game"
+	{
+		MENUITEM "E&xit", IDM_GAME_EXIT
+	}
+}

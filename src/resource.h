@@ -8,4 +8,7 @@
 #endif
 #define IDC_STATIC (-1) // all static control
 
+#define IDR_MENU      1000
+#define IDM_GAME_EXIT 1001
+
 #endif //RESOURCE_H

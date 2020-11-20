@@ -2,6 +2,8 @@
 
 #include <Windowsx.h>
 
+#include "Resource.h"
+
 wchar_t MainWindow::szClassName[] = L"Minesweeper";
 
 MainWindow::MainWindow(Logger& logger) 
@@ -23,7 +25,7 @@ BOOL MainWindow::RegisterClass(HINSTANCE hInstance)
     wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
     
-    //wc.lpszMenuName = MAKEINTRESOURCE(IDM_MENU);
+    wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU);
     
     return RegisterClassEx(&wc);
 }
@@ -77,6 +79,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
         HANDLE_MSG(hwnd, WM_CREATE, OnCreate);
         HANDLE_MSG(hwnd, WM_CLOSE, OnClose);
         HANDLE_MSG(hwnd, WM_DESTROY, OnDestroy);
+        HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
     }
     
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -86,6 +89,8 @@ BOOL MainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
 {
     UNREFERENCED_PARAMETER(hwnd);
     UNREFERENCED_PARAMETER(lpCreateStruct);
+    
+    
     
     return TRUE;
 }
@@ -102,3 +107,22 @@ void MainWindow::OnDestroy(HWND hwnd)
     PostQuitMessage(0);
 }
 
+void MainWindow::OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
+{
+    UNREFERENCED_PARAMETER(hwnd);
+    UNREFERENCED_PARAMETER(hwndCtl);
+    UNREFERENCED_PARAMETER(codeNotify);
+    
+    switch(id)
+    {
+        case IDM_GAME_EXIT:
+        {
+            OnCommand_Game_Exit();
+        } break;
+    }
+}
+
+void MainWindow::OnCommand_Game_Exit()
+{
+    PostQuitMessage(0);
+}

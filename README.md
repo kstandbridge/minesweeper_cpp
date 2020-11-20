@@ -7,7 +7,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] chore: initalize git repository
 - [x] feat: the window construct
 - [x] feat: basic error handling
-- [ ] feat: the menu bar construct
+- [x] feat: the menu bar construct
 - [ ] feat: the status bar construct
 - [ ] feat: the settings dialog construct
 - [ ] feat: draw a grid of button
