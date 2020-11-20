@@ -4,6 +4,11 @@
 
 wchar_t MainWindow::szClassName[] = L"Minesweeper";
 
+MainWindow::MainWindow(Logger& logger) 
+: m_logger(logger)
+{
+}
+
 BOOL MainWindow::RegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEX wc = {0};
@@ -25,8 +30,7 @@ BOOL MainWindow::RegisterClass(HINSTANCE hInstance)
 
 HWND MainWindow::Create(HINSTANCE hInstance)
 {
-    m_hwnd = CreateWindowEx (
-                             0,                   /* Extended possibilites for variation */
+    m_hwnd = CreateWindowEx (0,                   /* Extended possibilites for variation */
                              szClassName,         /* Classname */
                              szClassName,         /* Title Text */
                              WS_OVERLAPPEDWINDOW, /* default window */

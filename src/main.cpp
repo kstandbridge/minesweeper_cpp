@@ -2,7 +2,10 @@
 
 #include <Windows.h>
 
+#include "Logger.h"
 #include "MainWindow.h"
+
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -10,11 +13,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     UNREFERENCED_PARAMETER(pCmdLine);
     UNREFERENCED_PARAMETER(nCmdShow);
     
-    MainWindow mainWindow;
+    Logger logger;
+    MainWindow mainWindow(logger);
     
     if(!MainWindow::RegisterClass(hInstance))
     {
-        std::cout << "Failed to register window class due to error code: " << GetLastError() << std::endl;
+        logger.ErrorHandler(L"RegisterClass");
+        
         return EXIT_FAILURE;
     }
     
@@ -22,7 +27,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     
     if(hwnd == NULL)
     {
-        std::cout << "Failed to create window due to error code: " << GetLastError() << std::endl;
+        logger.ErrorHandler(L"CreateWindowEx");
         return EXIT_FAILURE;
     }
     

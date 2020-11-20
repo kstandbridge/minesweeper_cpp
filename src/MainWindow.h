@@ -5,12 +5,16 @@
 
 #include <Windows.h>
 
+#include "Logger.h"
+
 class MainWindow
 {
     private:
     HWND m_hwnd;
+    Logger m_logger;
     
     public:
+    MainWindow(Logger& logger);
     static BOOL RegisterClass(HINSTANCE hInstance);
     
     HWND Create(HINSTANCE hInstance);

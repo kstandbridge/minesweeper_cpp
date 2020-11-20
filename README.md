@@ -6,9 +6,10 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 
 - [x] chore: initalize git repository
 - [x] feat: the window construct
+- [x] feat: basic error handling
 - [ ] feat: the menu bar construct
 - [ ] feat: the status bar construct
-- [ ] feat: basic error handling
+- [ ] feat: the settings dialog construct
 - [ ] feat: draw a grid of button
 - [ ] feat: size/position buttons on window resize
 - [ ] feat: debug menu to show location of placed mines
@@ -21,7 +22,6 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [ ] feat: allow right click to flag tile as mine
 - [ ] feat: indicate success/fail on flagged tiles
 - [ ] feat: indicate bomb explosion on hit
-- [ ] feat: add settings to game difficulty
 - [ ] feat: add icons on tiles for different states
 
 ## Bugs
