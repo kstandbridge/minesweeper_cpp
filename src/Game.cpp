@@ -81,7 +81,7 @@ TILE_STATE Game::CheckTileState(int x, int y)
     TILE_STATE result = GetTileState(x, y);
     m_tilesToCheck--;
     
-    if(result == MINE)
+    if(result == MINE || result == FLAGGED_CORRECT)
     {
         m_tiles[y * m_columns + x] = EXPLODE;
         return EXPLODE;
@@ -117,4 +117,27 @@ TILE_STATE Game::CheckTileState(int x, int y)
     }
     
     return UNCHECKED;
+}
+
+TILE_STATE Game::GuessTileState(int x, int y)
+{
+    TILE_STATE tileState = GetTileState(x, y);
+    if(tileState == FLAGGED_CORRECT)
+    {
+        tileState = MINE;
+    }
+    else if(tileState == FLAGGED_INCORRECT)
+    {
+        tileState = UNCHECKED;
+    }
+    else if(tileState == MINE)
+    {
+        tileState = FLAGGED_CORRECT;
+    }
+    else
+    {
+        tileState = FLAGGED_INCORRECT;
+    }
+    m_tiles[y * m_columns + x] = tileState;
+    return tileState;
 }

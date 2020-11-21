@@ -27,8 +27,10 @@ class MainWindow
     static wchar_t szClassName[];
     
     static LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubClass, DWORD_PTR dwRefData);
     
     virtual LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT CALLBACK BtnProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubClass, DWORD_PTR dwRefData);
     
     private:
     BOOL OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct);
@@ -41,6 +43,7 @@ class MainWindow
     void OnCommand_Game_Exit();
     void OnCommand_Debug_ShowMines(HWND hwnd);
     void OnTimer(HWND hwnd, UINT id);
+    void Button_OnRButtonUp(HWND hwnd, int x, int y, UINT flags);
     
     
     void UpdateStatusText(HWND hwnd, int index, LPCWSTR lpszText);
@@ -50,6 +53,7 @@ class MainWindow
     BOOL CallOnSize(HWND hwnd);
     void ToggleShowMines(HWND hwnd, BOOL show_mines);
     BOOL DisableTiles(HWND hwnd);
+    
 };
 
 #endif //_MAIN_WINDOW_H

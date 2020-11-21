@@ -77,6 +77,23 @@ LRESULT CALLBACK MainWindow::WindowProcedure(HWND hwnd, UINT uMsg, WPARAM wParam
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+LRESULT CALLBACK MainWindow::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubClass, DWORD_PTR dwRefData)
+{
+    MainWindow* pThis = reinterpret_cast<MainWindow *>(dwRefData);
+    
+    if (pThis && uMsg == WM_DESTROY)
+    {
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
+    }
+    
+    if (pThis)
+    {
+        return pThis->BtnProc(hwnd, uMsg, wParam, lParam, uIdSubClass, dwRefData);
+    }
+    
+    return DefSubclassProc(hwnd, uMsg, wParam, lParam);
+}
+
 LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
@@ -90,6 +107,18 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
     }
     
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK MainWindow::BtnProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubClass, DWORD_PTR dwRefData)
+{
+    UNREFERENCED_PARAMETER(dwRefData);
+    UNREFERENCED_PARAMETER(uIdSubClass);
+    
+    switch(uMsg)
+    {
+        HANDLE_MSG(hwnd, WM_RBUTTONUP, Button_OnRButtonUp);
+    }
+    return DefSubclassProc(hwnd, uMsg, wParam, lParam);
 }
 
 BOOL MainWindow::OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
@@ -320,6 +349,28 @@ void MainWindow::OnTimer(HWND hwnd, UINT id)
     }
 }
 
+void MainWindow::Button_OnRButtonUp(HWND hwnd, int x, int y, UINT flags)
+{
+    UNREFERENCED_PARAMETER(x);
+    UNREFERENCED_PARAMETER(y);
+    UNREFERENCED_PARAMETER(flags);
+    
+    int columns = m_game.get_columns();
+    
+    int button_id = GetDlgCtrlID(hwnd);
+    int button_x = (button_id - IDC_BUTTON) % columns;
+    int button_y = (button_id - IDC_BUTTON) / columns;
+    TILE_STATE tileState = m_game.GuessTileState(button_x, button_y);
+    if(tileState == UNCHECKED || tileState == MINE)
+    {
+        Button_SetText(hwnd, L" ");
+    }
+    else
+    {
+        Button_SetText(hwnd, L"M");
+    }
+}
+
 void MainWindow::UpdateStatusText(HWND hwnd, int index, LPCWSTR lpszText)
 {
     HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
@@ -347,6 +398,7 @@ BOOL MainWindow::CleanUpGrid(HWND hwnd)
             return FALSE;
         }
         
+        RemoveWindowSubclass(hButton, ButtonProc, 1);
         DestroyWindow(hButton);
     }
     
@@ -389,6 +441,8 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
             m_logger.ErrorHandler(L"CreateWindow");
             return FALSE;
         }
+        
+        SetWindowSubclass(hButton, ButtonProc, 1, (DWORD_PTR)this);
     }
     
     m_game.InitGame();
@@ -444,7 +498,10 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
             {
                 if(x + i >= 0 && x + i < columns && y + j >= 0 && y + j < rows)
                 {
-                    if(m_game.GetTileState(x + i, j + y) == MINE)
+                    TILE_STATE current_tile_state = m_game.GetTileState(x + i, j + y);
+                    if(current_tile_state == MINE || 
+                       current_tile_state == FLAGGED_CORRECT || 
+                       current_tile_state == FLAGGED_INCORRECT)
                     {
                         continue;
                     }
@@ -537,11 +594,33 @@ void MainWindow::ToggleShowMines(HWND hwnd, BOOL show_mines)
             {
                 if(show_mines)
                 {
-                    Button_SetText(button_hwnd, L"B");
+                    Button_SetText(button_hwnd, L"M");
                 }
                 else
                 {
                     Button_SetText(button_hwnd, L"");
+                }
+            } break;
+            case FLAGGED_CORRECT:
+            {
+                if(show_mines)
+                {
+                    Button_SetText(button_hwnd, L"Y");
+                }
+                else
+                {
+                    Button_SetText(button_hwnd, L"M");
+                }
+            } break;
+            case FLAGGED_INCORRECT:
+            {
+                if(show_mines)
+                {
+                    Button_SetText(button_hwnd, L"N");
+                }
+                else
+                {
+                    Button_SetText(button_hwnd, L"M");
                 }
             } break;
             case EXPLODE:

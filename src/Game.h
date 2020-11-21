@@ -54,6 +54,7 @@ class Game
     
     TILE_STATE GetTileState(int x, int y);
     TILE_STATE CheckTileState(int x, int y);
+    TILE_STATE GuessTileState(int x, int y);
 };
 
 #endif //_GAME_H
