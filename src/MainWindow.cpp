@@ -12,6 +12,7 @@ wchar_t MainWindow::szClassName[] = L"Minesweeper";
 MainWindow::MainWindow(Logger& logger, Game& game) 
 : m_logger(logger)
 , m_game(game)
+, m_timerSeconds(0)
 {
 }
 
@@ -85,6 +86,7 @@ LRESULT CALLBACK MainWindow::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
         HANDLE_MSG(hwnd, WM_DESTROY, OnDestroy);
         HANDLE_MSG(hwnd, WM_SIZE, OnSize);
         HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
+        HANDLE_MSG(hwnd, WM_TIMER, OnTimer);
     }
     
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -122,7 +124,7 @@ void MainWindow::OnClose(HWND hwnd)
 
 void MainWindow::OnDestroy(HWND hwnd)
 {
-    UNREFERENCED_PARAMETER(hwnd);
+    KillTimer(hwnd, IDT_TIMER);
     
     PostQuitMessage(0);
 }
@@ -304,7 +306,21 @@ void MainWindow::OnCommand_Debug_ShowMines(HWND hwnd)
     }
 }
 
-void MainWindow::UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText)
+void MainWindow::OnTimer(HWND hwnd, UINT id)
+{
+    switch(id)
+    {
+        case IDT_TIMER:
+        {
+            std::wstringstream ss;
+            ss
+                << m_timerSeconds++ << L" seconds";
+            UpdateStatusText(hwnd, 0, ss.str().c_str());
+        } break;
+    }
+}
+
+void MainWindow::UpdateStatusText(HWND hwnd, int index, LPCWSTR lpszText)
 {
     HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
     if(hStatus == NULL)
@@ -390,6 +406,9 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
         return FALSE;
     }
     
+    m_timerSeconds = 0;
+    SetTimer(hwnd, IDT_TIMER, 1000, NULL);
+    
     UpdateStatusText(hwnd, 1, L"Good Luck!");
     return TRUE;
 }
@@ -413,6 +432,7 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
             MessageBox(hwnd, L"Failed to disable all tiles", L"Error", MB_OK | MB_ICONERROR);
             return;
         }
+        KillTimer(hwnd, IDT_TIMER);
         MessageBox(hwnd, L"Game Over!!!", L"BOOM!!!", MB_OK | MB_ICONWARNING);
     }
     else if(tileState == CLEAR)
@@ -469,6 +489,7 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
             return;
         }
         SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)L"Winner!!!");
+        KillTimer(hwnd, IDT_TIMER);
         MessageBox(hwnd, L"Winner!!!", L"Success!!!", MB_OK | MB_ICONINFORMATION);
     }
     else

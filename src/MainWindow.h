@@ -14,6 +14,7 @@ class MainWindow
     HWND m_hwnd;
     Logger m_logger;
     Game m_game;
+    int m_timerSeconds;
     
     public:
     MainWindow(Logger& logger, Game& game);
@@ -39,9 +40,10 @@ class MainWindow
     void OnCommand_Game_Settings(HWND hwnd);
     void OnCommand_Game_Exit();
     void OnCommand_Debug_ShowMines(HWND hwnd);
+    void OnTimer(HWND hwnd, UINT id);
     
     
-    void UpdateStatusText(HWND hwnd, int index, LPTSTR lpszText);
+    void UpdateStatusText(HWND hwnd, int index, LPCWSTR lpszText);
     BOOL CleanUpGrid(HWND hwnd);
     BOOL InitalizeGrid(HWND hwnd);
     void OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl);

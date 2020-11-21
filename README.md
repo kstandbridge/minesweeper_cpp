@@ -20,7 +20,7 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: auto click surrounding tile if no mines
 - [x] feat: add game win when all mines found
 - [x] feat: generate mines after first move
-- [ ] feat: add timer when game starts
+- [x] feat: add timer when game starts
 - [ ] feat: allow right click to flag tile as mine
 - [ ] feat: indicate success/fail on flagged tiles
 - [ ] feat: indicate bomb explosion on hit

@@ -15,6 +15,7 @@
 #define IDM_DEBUG_SHOW_MINES 1101
 
 #define IDC_STATUS 1100
+#define IDT_TIMER  1200
 
 #define IDD_SETTINGS         2000
 #define IDC_SETTINGS_EASY    2001
