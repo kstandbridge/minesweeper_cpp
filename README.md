@@ -22,10 +22,12 @@ The purpose of this project is to learn to use the Win32 API along with C++ foll
 - [x] feat: generate mines after first move
 - [x] feat: add timer when game starts
 - [x] feat: allow right click to flag tile as mine
-- [ ] feat: indicate success/fail on flagged tiles
-- [ ] feat: indicate bomb explosion on hit
+- [ ] feat: allow save/load of game
+
+## Nice to have
 - [ ] feat: add icons on tiles for different states
 
 ## Bugs
 
 ## Tech Debt
+- [ ] tech: offload save/load to background thread
