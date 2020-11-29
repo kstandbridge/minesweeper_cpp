@@ -13,13 +13,13 @@ SettingsDialog::SettingsDialog(Logger& logger)
 {
 }
 
-int SettingsDialog::ShowDialog(HINSTANCE hInstance, HWND hwnd)
+INT_PTR SettingsDialog::ShowDialog(HINSTANCE hInstance, HWND hwnd)
 {
-    int res = DialogBoxParam(hInstance,
-                             MAKEINTRESOURCE(IDD_SETTINGS),
-                             hwnd,
-                             SettingsDialog::DialogProcedure,
-                             reinterpret_cast<LPARAM>(this));
+    INT_PTR res = DialogBoxParam(hInstance,
+                                 MAKEINTRESOURCE(IDD_SETTINGS),
+                                 hwnd,
+                                 SettingsDialog::DialogProcedure,
+                                 reinterpret_cast<LPARAM>(this));
     if(res == -1)
     {
         m_logger.ErrorHandler(L"DialogBoxParam");
@@ -27,7 +27,7 @@ int SettingsDialog::ShowDialog(HINSTANCE hInstance, HWND hwnd)
     return res;
 }
 
-BOOL CALLBACK SettingsDialog::DialogProcedure(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK SettingsDialog::DialogProcedure(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     SettingsDialog* pThis = reinterpret_cast<SettingsDialog*>(GetWindowLongPtr(hwnd, DWLP_USER));
     
@@ -176,7 +176,7 @@ void SettingsDialog::OnCommand_OK(HWND hwnd)
     {
         m_logger.ErrorHandler(L"GetDlgItem");
     }
-    m_mines = SendMessage(hMines, TBM_GETPOS, 0, 0);
+    m_mines = (int)SendMessage(hMines, TBM_GETPOS, 0, 0);
     
     EndDialog(hwnd, IDOK);
 }

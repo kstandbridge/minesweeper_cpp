@@ -1,4 +1,4 @@
 @echo off
-pushd bin
-minesweeper.exe
+pushd tmp\Debug\
+Minesweeper.exe
 popd

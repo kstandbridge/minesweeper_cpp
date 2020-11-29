@@ -266,7 +266,7 @@ void MainWindow::OnCommand_Game_New(HWND hwnd)
 void MainWindow::OnCommand_Game_Settings(HWND hwnd)
 {
     SettingsDialog settingsDlg(m_logger);
-    int res = settingsDlg.ShowDialog(GetModuleHandle(NULL), hwnd);
+    INT_PTR res = settingsDlg.ShowDialog(GetModuleHandle(NULL), hwnd);
     if(res == IDOK)
     {
         if(!CleanUpGrid(hwnd))

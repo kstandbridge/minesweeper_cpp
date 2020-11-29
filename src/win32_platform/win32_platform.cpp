@@ -43,5 +43,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         DispatchMessage(&uMsg);
     }
     
-    return uMsg.wParam;
+    return (int)uMsg.wParam;
 }

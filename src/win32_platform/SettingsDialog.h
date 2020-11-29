@@ -15,7 +15,7 @@ class SettingsDialog
     
     public:
     SettingsDialog(Logger& logger);
-    int ShowDialog(HINSTANCE hInstance, HWND hwnd);
+    INT_PTR ShowDialog(HINSTANCE hInstance, HWND hwnd);
     
     int get_columns() { return m_columns; }
     int get_rows() { return m_rows; }
@@ -23,7 +23,7 @@ class SettingsDialog
     
     protected:
     
-    static BOOL CALLBACK DialogProcedure(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR CALLBACK DialogProcedure(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     
     virtual BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     
