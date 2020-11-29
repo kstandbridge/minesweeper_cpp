@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -WX -W4 -EHsc")
+
+add_definitions(-DUNICODE -D_UNICODE)
+
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-add_definitions(-DUNICODE -D_UNICODE)
-
-project(Sandbox VERSION 1.0.0)
+project(Minesweeper_cpp VERSION 1.0.0)
 
 add_subdirectory(src)

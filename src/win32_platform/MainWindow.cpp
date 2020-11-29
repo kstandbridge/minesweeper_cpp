@@ -429,7 +429,7 @@ BOOL MainWindow::InitalizeGrid(HWND hwnd)
     for(int x = 0; x < columns; x++)
         for(int y = 0; y < rows; y++)
     {
-        int button_id = IDC_BUTTON + (y * columns  + x);
+        long long button_id = IDC_BUTTON + (y * columns  + x);
         
         HWND hButton = CreateWindow(L"BUTTON", L"", 
                                     WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
@@ -522,20 +522,13 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     }
     else
     {
-        wchar_t buf[255];
-        swprintf_s(buf, sizeof(buf), L"%d", tileState);
+        wchar_t buf[256];
+        swprintf_s(buf, 256, L"%d", tileState);
         
         Button_SetText(hwndCtl, buf);
         Button_Enable(hwndCtl, FALSE);
     }
-    
-    HWND hStatus = GetDlgItem(hwnd, IDC_STATUS);
-    if(hStatus == NULL)
-    {
-        m_logger.ErrorHandler(L"GetDlgItem");
-        return;
-    }
-    int tiles_to_check = m_game.get_tiles_to_check();
+        int tiles_to_check = m_game.get_tiles_to_check();
     
     if(tiles_to_check == 0)
     {
@@ -545,7 +538,7 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
             MessageBox(hwnd, L"Failed to disable all tiles", L"Error", MB_OK | MB_ICONERROR);
             return;
         }
-        SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)L"Winner!!!");
+        UpdateStatusText(hwnd, 1, L"Winner!!!");
         KillTimer(hwnd, IDT_TIMER);
         MessageBox(hwnd, L"Winner!!!", L"Success!!!", MB_OK | MB_ICONINFORMATION);
     }
@@ -553,7 +546,7 @@ void MainWindow::OnCommand_Tile(HWND hwnd, int id, HWND hwndCtl)
     {
         std::wstringstream ss;
         ss << "Tiles to check: " << tiles_to_check;
-        SendMessage(hStatus, SB_SETTEXT, 1, (LPARAM)ss.str().c_str());
+        UpdateStatusText(hwnd, 1, ss.str().c_str());
     }
 }
 
@@ -633,8 +626,8 @@ void MainWindow::ToggleShowMines(HWND hwnd, BOOL show_mines)
             } break;
             default:
             {
-                wchar_t buf[255];
-                swprintf_s(buf, sizeof(buf), L"%d", state);
+                wchar_t buf[256];
+                swprintf_s(buf, 256, L"%d", state);
                 
                 Button_SetText(button_hwnd, buf);
             } break;

@@ -32,6 +32,17 @@ command_list = {
 		.cmd = {
 			{ "run.bat", .os = "win" },
 		}
+	},
+	{
+		.name = "clean",
+		.out = "*clean*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = true,
+		.cmd = {
+			{ "clean.bat", .os = "win" },
+		}
 	}
 };
 fkey_command[5] = "run";
+fkey_command[8] = "clean";
